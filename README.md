@@ -1,4 +1,4 @@
-# My Microservice Project
+# My Microservice Project - TODO-list
 
 ## Rövid bemutatás
 
@@ -20,5 +20,16 @@ A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchem
 - `requirements.txt` - szükséges csomagok (fastapi, uvicorn, streamlit, sqlalchemy, pydantic)
 - `setup.bat`
     - virtuális környezet létrehozása és csomagok telepítése `requirements.txt` alapján
+    - tájékoztat, hogy milyen URL-en érhető el a backend (FastAPI)
     - elindítja a FastAPI backend-et Uvicorn-nal
 - `README.md` - ez a dokumentáció
+
+## API végpontok
+
+- A backend FastAPI-vel készült, és az alábbi CRUD végpontokat tartalmazza a TODO itemekhez:
+
+    - `GET /items/` - minden item listázása
+    - `POST /items/` - új item létrehozása
+    - `GET /items/{id}` - egy item lekérése ID alapján
+    - `PUT /items/{id}` - egy item frissítése
+    - `DELETE /items/{id}` - egy item törlése
