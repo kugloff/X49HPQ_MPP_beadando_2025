@@ -14,6 +14,9 @@ A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchem
 
 ## Mappastruktúra
 
-- backend/ - API, modellek, szolgáltatások, adatbázis
-- frontend/ - Streamlit app és komponensek
-- README.md - ez a dokumentáció
+- `backend/` - API, modellek, szolgáltatások, adatbázis
+- `frontend/` - Streamlit app és komponensek
+- `venv/` - virtuális környezet
+- `requirements.txt` - szükséges csomagok (fastapi, uvicorn, streamlit, sqlalchemy, pydantic)
+- `setup.bat` - virtuális környezet létrehozása és csomagok telepítése `requirements.txt` alapján
+- `README.md` - ez a dokumentáció
