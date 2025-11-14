@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+from datetime import datetime, date
 
 BASE_URL = "http://127.0.0.1:8000"
 
@@ -27,8 +28,13 @@ if choice == "TODO lista":
             for item in pending_items:
                 col1, col2 = st.columns([5, 2])
 
+                due_date_obj = datetime.fromisoformat(item['due_date']).date() if item.get("due_date") else None
+                due_str = f" (Határidő: {due_date_obj})" if due_date_obj else ""
+                if due_date_obj and due_date_obj < date.today():
+                    due_str += " ⚠️ Lejárt!"
+
                 with col1:
-                    st.write(f"**{item['name']}** - {item['description']}")
+                    st.markdown(f"**{item['name']}** - {item['description']}{due_str}")
 
                 with col2:
                     c1, c2 = st.columns(2)
@@ -51,10 +57,11 @@ if choice == "TODO lista":
             st.info("Még nincs kész feladat.")
         else:
             for item in done_items:
+                due_str = f" (Határidő: {item['due_date'][:10]})" if item.get("due_date") else ""
                 col1, col2 = st.columns([5, 2])
 
                 with col1:
-                    st.write(f"~~{item['name']} - {item['description']}~~")
+                    st.write(f"~~{item['name']} - {item['description']}{due_str}~~")
 
                 with col2:
                     if st.button("Törlés", key=f"delete_done_{item['id']}"):
@@ -68,26 +75,29 @@ elif choice == "Új TODO":
     st.subheader("Új TODO hozzáadása")
 
     with st.form("todo_form", clear_on_submit=False):
-        name = st.text_input("Név", key="name_input")
-        description = st.text_area("Leírás", key="desc_input")
+        name = st.text_input("Név")
+        description = st.text_area("Leírás")
+        due_date = st.date_input("Határidő")
         submit = st.form_submit_button("Hozzáadás")
 
         if submit:
-            name_val = st.session_state.name_input.strip()
-            desc_val = st.session_state.desc_input.strip()
+            name_val = name.strip()
+            desc_val = description.strip()
 
             if not name_val or not desc_val:
                 st.error("Minden mezőt ki kell tölteni!")
             else:
+                payload = {
+                    "name": name_val,
+                    "description": desc_val,
+                    "due_date": datetime.combine(due_date, datetime.min.time()).isoformat() if due_date else None
+                }
                 try:
-                    resp = requests.post(
-                        f"{BASE_URL}/items/",
-                        json={"name": name_val, "description": desc_val}
-                    )
+                    resp = requests.post(f"{BASE_URL}/items/", json=payload)
                     if resp.status_code in (200, 201):
-                        #st.session_state.name_input = ""
-                        #st.session_state.desc_input = ""
                         st.success("TODO sikeresen hozzáadva!")
+                    elif resp.status_code == 400:
+                        st.error(resp.json().get("detail", "Hiba történt a hozzáadáskor."))
                     else:
                         st.error("Nem sikerült hozzáadni.")
                 except Exception as e:
@@ -108,22 +118,14 @@ elif choice == "Statisztika":
         with col1:
             st.markdown("### Folyamatban lévő")
             st.markdown(f"**Összesen:** {len(pending_items)} db")
-
-            if not pending_items:
-                st.info("Nincs folyamatban lévő feladat.")
-            else:
-                for item in pending_items:
-                    st.write(f"- **{item['name']}**: {item['description']}")
+            for item in pending_items:
+                st.write(f"- **{item['name']}**: {item['description']}")
 
         with col2:
             st.markdown("### Kész")
             st.markdown(f"**Összesen:** {len(done_items)} db")
-
-            if not done_items:
-                st.info("Még nincs kész feladat.")
-            else:
-                for item in done_items:
-                    st.write(f"- ~~{item['name']}~~")
+            for item in done_items:
+                st.write(f"- ~~{item['name']}~~")
 
         st.markdown("---")
         st.markdown("### Állapotdiagram")
