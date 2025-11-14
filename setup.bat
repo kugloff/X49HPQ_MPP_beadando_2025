@@ -19,5 +19,10 @@ if exist requirements.txt (
 )
 
 echo ----------------------------------------
-echo Kész! A virtuális környezet aktív és csomagok telepítve
+echo A virtuális környezet aktív és csomagok telepítve
+
+echo ----------------------------------------
+echo Backend indítása Uvicorn-nal...
+uvicorn backend.main:app --reload
+
 pause
