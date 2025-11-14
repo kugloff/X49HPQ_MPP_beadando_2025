@@ -18,5 +18,7 @@ A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchem
 - `frontend/` - Streamlit app és komponensek
 - `venv/` - virtuális környezet
 - `requirements.txt` - szükséges csomagok (fastapi, uvicorn, streamlit, sqlalchemy, pydantic)
-- `setup.bat` - virtuális környezet létrehozása és csomagok telepítése `requirements.txt` alapján
+- `setup.bat`
+    - virtuális környezet létrehozása és csomagok telepítése `requirements.txt` alapján
+    - elindítja a FastAPI backend-et Uvicorn-nal
 - `README.md` - ez a dokumentáció
