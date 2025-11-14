@@ -7,12 +7,12 @@ A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchem
 
 ## Használat:
 
-- 1. Backend indítása:
+- Backend indítása:
     - A projekt gyökerében futtasd a `setup.bat` fájlt
         - virtuális környezet létrehozása és csomagok telepítése `requirements.txt` alapján
         - tájékoztat, hogy milyen URL-en érhető el a backend (FastAPI)
         - elindítja a FastAPI backend-et Uvicorn-nal
-- 2. Frontend indítása:
+- Frontend indítása:
     - A frontend mappában található `setup_frontend.bat` fájlt futtasd
         - frontend indítása Streamlit-el
         - a FastAPI backend CRUD végpontjait használja
@@ -36,10 +36,10 @@ A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchem
 
 ## API végpontok
 
-- A backend FastAPI-vel készült, és az alábbi CRUD végpontokat tartalmazza a TODO itemekhez:
+- A backend FastAPI-vel készült, és az alábbi CRUD végpontokat tartalmazza a TODO elemekhez:
 
-    - `GET /items/` - minden item listázása
-    - `POST /items/` - új item létrehozása
-    - `GET /items/{id}` - egy item lekérése ID alapján
-    - `PUT /items/{id}` - egy item frissítése
-    - `DELETE /items/{id}` - egy item törlése
+    - `GET /items/` - minden TODO listázása
+    - `POST /items/` - új TODO létrehozása
+    - `GET /items/{id}` - egy TODO lekérése ID alapján
+    - `PUT /items/{id}` - egy TODO frissítése
+    - `DELETE /items/{id}` - egy TODO törlése

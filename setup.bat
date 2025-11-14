@@ -1,6 +1,11 @@
 @echo off
 chcp 65001
 
+IF EXIST app.db (
+    del app.db
+    echo SQLite adatbázis törölve.
+)
+
 IF NOT EXIST venv (
     python -m venv venv
     echo ----------------------------------------

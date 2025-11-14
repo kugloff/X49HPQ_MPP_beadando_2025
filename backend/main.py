@@ -18,12 +18,12 @@ def get_db():
 
 # CRUD
 
-# Lista minden itemről
+# todo lista
 @app.get("/items/", response_model=list[pydantic_models.ItemRead])
 def read_items(db: Session = Depends(get_db)):
     return db.query(db_models.Item).all()
 
-# Új item létrehozása
+# Új todo létrehozása
 @app.post("/items/", response_model=pydantic_models.ItemRead)
 def create_item(item: pydantic_models.ItemCreate, db: Session = Depends(get_db)):
     db_item = db_models.Item(name=item.name, description=item.description)
@@ -32,20 +32,20 @@ def create_item(item: pydantic_models.ItemCreate, db: Session = Depends(get_db))
     db.refresh(db_item)
     return db_item
 
-# Egy item lekérése ID alapján
+# Egy todo lekérése ID alapján
 @app.get("/items/{item_id}", response_model=pydantic_models.ItemRead)
 def read_item(item_id: int, db: Session = Depends(get_db)):
     db_item = db.query(db_models.Item).filter(db_models.Item.id == item_id).first()
     if not db_item:
-        raise HTTPException(status_code=404, detail="Item nem található")
+        raise HTTPException(status_code=404, detail="TODO nem található")
     return db_item
 
-# Item frissítése
+# todo frissítése
 @app.put("/items/{item_id}", response_model=pydantic_models.ItemRead)
 def update_item(item_id: int, item: pydantic_models.ItemUpdate, db: Session = Depends(get_db)):
     db_item = db.query(db_models.Item).filter(db_models.Item.id == item_id).first()
     if not db_item:
-        raise HTTPException(status_code=404, detail="Item nem található")
+        raise HTTPException(status_code=404, detail="TODO nem található")
     if item.name is not None:
         db_item.name = item.name
     if item.description is not None:
@@ -56,12 +56,12 @@ def update_item(item_id: int, item: pydantic_models.ItemUpdate, db: Session = De
     db.refresh(db_item)
     return db_item
 
-# Item törlése
+# todo törlése
 @app.delete("/items/{item_id}")
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     db_item = db.query(db_models.Item).filter(db_models.Item.id == item_id).first()
     if not db_item:
-        raise HTTPException(status_code=404, detail="Item nem található")
+        raise HTTPException(status_code=404, detail="TODO nem található")
     db.delete(db_item)
     db.commit()
-    return {"detail": "Item törölve"}
+    return {"detail": "TODO törölve"}
