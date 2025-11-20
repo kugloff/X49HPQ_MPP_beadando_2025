@@ -21,7 +21,7 @@ echo Virtuális környezet aktiválva.
 echo ----------------------------------------
 
 if exist requirements.txt (
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
     echo ----------------------------------------
     echo Minden csomag telepítve a requirements.txt alapján
 ) ELSE (
