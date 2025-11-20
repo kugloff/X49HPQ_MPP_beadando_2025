@@ -1,4 +1,4 @@
-# My Microservice Project - TODO-list
+# TODO-list projekt
 
 ## Rövid bemutatás
 
