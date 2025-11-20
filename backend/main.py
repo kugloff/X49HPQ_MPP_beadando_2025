@@ -86,7 +86,7 @@ async def check_overdue():
             logging.error(f"Hiba a check_overdue futása közben: {e}")
         finally:
             db.close()
-        await asyncio.sleep(60*60)  #óránként
+        await asyncio.sleep(60*60)  # óránként
 
 @app.on_event("startup")
 async def start_background_tasks():
@@ -106,36 +106,54 @@ def read_items(db: Session = Depends(get_db)):
 
 @app.post("/items/", response_model=ItemRead)
 def create_item(item: ItemCreate, db: Session = Depends(get_db)):
-    existing_item = db.query(Item).filter(Item.name == item.name).first()
-    if existing_item:
-        raise HTTPException(status_code=400, detail="Már létezik ilyen nevű TODO")
-    db_item = Item(name=item.name, description=item.description, due_date=item.due_date)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    logging.info(f"TODO létrehozva: {db_item.name}")
-    return db_item
+    try:
+        existing_item = db.query(Item).filter(Item.name == item.name).first()
+        if existing_item:
+            logging.warning(f"Duplikált TODO létrehozás kísérlet: {item.name}")
+            raise HTTPException(status_code=400, detail="Már létezik ilyen nevű TODO")
+
+        db_item = Item(name=item.name, description=item.description, due_date=item.due_date)
+        db.add(db_item)
+        db.commit()
+        db.refresh(db_item)
+        logging.info(f"TODO létrehozva: {db_item.name}")
+        return db_item
+    except Exception as e:
+        logging.error(f"Hiba TODO létrehozásakor: {e}")
+        raise HTTPException(status_code=500, detail="Hiba történt a TODO létrehozásakor")
 
 @app.put("/items/{item_id}", response_model=ItemRead)
 def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
-    db_item = db.query(Item).filter(Item.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="TODO nem található")
-    if item.name is not None: db_item.name = item.name
-    if item.description is not None: db_item.description = item.description
-    if item.status is not None: db_item.status = item.status
-    if item.due_date is not None: db_item.due_date = item.due_date
-    db.commit()
-    db.refresh(db_item)
-    logging.info(f"TODO frissítve: {db_item.name}")
-    return db_item
+    try:
+        db_item = db.query(Item).filter(Item.id == item_id).first()
+        if not db_item:
+            logging.warning(f"Nem található TODO frissítéshez: {item_id}")
+            raise HTTPException(status_code=404, detail="TODO nem található")
+        if item.name is not None:
+            db_item.name = item.name
+        if item.description is not None:
+            db_item.description = item.description
+        if item.status is not None:
+            db_item.status = item.status
+        db.commit()
+        db.refresh(db_item)
+        logging.info(f"TODO frissítve: {db_item.name}")
+        return db_item
+    except Exception as e:
+        logging.error(f"Hiba TODO frissítésekor: {e}")
+        raise HTTPException(status_code=500, detail="Hiba történt a TODO frissítésekor")
 
 @app.delete("/items/{item_id}")
 def delete_item(item_id: int, db: Session = Depends(get_db)):
-    db_item = db.query(Item).filter(Item.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="TODO nem található")
-    db.delete(db_item)
-    db.commit()
-    logging.info(f"TODO törölve: {db_item.name}")
-    return {"detail": "TODO törölve"}
+    try:
+        db_item = db.query(Item).filter(Item.id == item_id).first()
+        if not db_item:
+            logging.warning(f"Nem található TODO törléshez: {item_id}")
+            raise HTTPException(status_code=404, detail="TODO nem található")
+        db.delete(db_item)
+        db.commit()
+        logging.info(f"TODO törölve: {db_item.name}")
+        return {"detail": "TODO törölve"}
+    except Exception as e:
+        logging.error(f"Hiba TODO törléskor: {e}")
+        raise HTTPException(status_code=500, detail="Hiba történt a TODO törlésekor")
