@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from datetime import datetime, date
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://x49hpq-mpp-beadando-2025.onrender.com"
 
 st.set_page_config(page_title="TODO App", layout="centered")
 st.title("TODO Lista alkalmazás")

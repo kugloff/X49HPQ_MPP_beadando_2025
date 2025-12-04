@@ -5,9 +5,10 @@
 Ez a projekt egy mikroszerviz-szerű Python alkalmazás, amely demonstrálja a **procedurális, funkcionális és objektumorientált programozás** alkalmazását.  
 A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchemy ORM alapú adatbázist, valamint automatizált feladatvégzést.
 
-Streamlit app backend nélkül: https://x49hpqmppbeadando2025.streamlit.app
+Streamlit app: https://x49hpqmppbeadando2025.streamlit.app
+Render: https://x49hpq-mpp-beadando-2025.onrender.com
 
-## Használat:
+## Használat lokálisan:
 
 - Backend indítása:
     - A projekt gyökerében futtasd a `setup.bat` fájlt
