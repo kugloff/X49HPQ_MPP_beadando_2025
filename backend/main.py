@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="[%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler("temp/backend.log"),
+        logging.FileHandler("tmp/backend.log"),
         logging.StreamHandler()
     ]
 )
