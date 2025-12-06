@@ -28,10 +28,12 @@ if choice == "TODO lista":
             for item in pending_items:
                 col1, col2 = st.columns([5, 2])
 
-                due_date_obj = datetime.fromisoformat(item['due_date']).date() if item.get("due_date") else None
-                due_str = f" (Határidő: {due_date_obj})" if due_date_obj else ""
-                if due_date_obj and due_date_obj < date.today():
-                    due_str += " ⚠️ Lejárt!"
+                due_str = ""
+                if item.get("due_date"):
+                    due_str = f" (Határidő: {item['due_date'][:10]})"
+
+                if item.get("status") == "overdue":
+                    due_str += "⚠️ Lejárt!"
 
                 with col1:
                     st.markdown(f"**{item['name']}** - {item['description']}{due_str}")
