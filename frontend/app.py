@@ -38,10 +38,11 @@ if choice == "TODO lista":
                     st.markdown(f"**{item['name']}** - {item['description']}{due_str}")
 
                 with col2:
-                    if st.button("Kész", key=f"done_{item['id']}"):
+                    c1, c2 = st.columns(2)
+                    if c1.button("Kész", key=f"done_{item['id']}"):
                         requests.put(f"{BASE_URL}/items/{item['id']}", json={"status": "done"})
                         st.rerun()
-                    if st.button("Törlés", key=f"delete_{item['id']}"):
+                    if c2.button("Törlés", key=f"delete_{item['id']}"):
                         requests.delete(f"{BASE_URL}/items/{item['id']}")
                         st.rerun()
 
