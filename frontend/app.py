@@ -21,7 +21,6 @@ if choice == "TODO lista":
         done_items = [i for i in items if i["status"] == "done"]
 
         st.markdown("### Folyamatban lévő feladatok")
-
         if not pending_items:
             st.info("Nincs folyamatban lévő feladat.")
         else:
@@ -30,25 +29,19 @@ if choice == "TODO lista":
 
                 due_str = ""
                 if item.get("due_date"):
-                    due_str = f" (Határidő: {item['due_date'][:10]})"
-
-                if item.get("status") == "overdue":
-                    due_str += "⚠️ Lejárt!"
+                    due_date_obj = datetime.fromisoformat(item['due_date']).date()
+                    due_str = f" (Határidő: {due_date_obj})"
+                    if due_date_obj < date.today() and item.get("status") != "done":
+                        due_str += " ⚠️ Lejárt!"
 
                 with col1:
                     st.markdown(f"**{item['name']}** - {item['description']}{due_str}")
 
                 with col2:
-                    c1, c2 = st.columns(2)
-
-                    if c1.button("Kész", key=f"done_{item['id']}"):
-                        requests.put(
-                            f"{BASE_URL}/items/{item['id']}",
-                            json={"status": "done"}
-                        )
+                    if st.button("Kész", key=f"done_{item['id']}"):
+                        requests.put(f"{BASE_URL}/items/{item['id']}", json={"status": "done"})
                         st.rerun()
-
-                    if c2.button("Törlés", key=f"delete_{item['id']}"):
+                    if st.button("Törlés", key=f"delete_{item['id']}"):
                         requests.delete(f"{BASE_URL}/items/{item['id']}")
                         st.rerun()
 
@@ -59,8 +52,14 @@ if choice == "TODO lista":
             st.info("Még nincs kész feladat.")
         else:
             for item in done_items:
-                due_str = f" (Határidő: {item['due_date'][:10]})" if item.get("due_date") else ""
                 col1, col2 = st.columns([5, 2])
+
+                due_str = ""
+                if item.get("due_date"):
+                    due_date_obj = datetime.fromisoformat(item['due_date']).date()
+                    due_str = f" (Határidő: {due_date_obj})"
+                    if due_date_obj < date.today() and item.get("status") != "done":
+                        due_str += " ⚠️ Lejárt!"
 
                 with col1:
                     st.write(f"~~{item['name']} - {item['description']}{due_str}~~")

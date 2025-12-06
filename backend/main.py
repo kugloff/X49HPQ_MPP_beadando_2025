@@ -111,12 +111,19 @@ def create_item(item: ItemCreate, db: Session = Depends(get_db)):
         if existing_item:
             logging.warning(f"Duplikált TODO létrehozás kísérlet: {item.name}")
             raise HTTPException(status_code=400, detail="Már létezik ilyen nevű TODO")
+        
+        status = "overdue" if item.due_date and item.due_date < datetime.utcnow() else "pending"
 
-        db_item = Item(name=item.name, description=item.description, due_date=item.due_date)
+        db_item = Item(
+            name=item.name,
+            description=item.description,
+            due_date=item.due_date,
+            status=status
+        )
         db.add(db_item)
         db.commit()
         db.refresh(db_item)
-        logging.info(f"TODO létrehozva: {db_item.name}")
+        logging.info(f"TODO létrehozva: {db_item.name} (status: {db_item.status})")
         return db_item
     except Exception as e:
         logging.error(f"Hiba TODO létrehozásakor: {e}")
