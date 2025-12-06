@@ -6,6 +6,7 @@ Ez a projekt egy mikroszerviz-szerű Python alkalmazás, amely demonstrálja a *
 A rendszer tartalmaz FastAPI alapú backend-et, Streamlit frontend-et, SQLAlchemy ORM alapú adatbázist, valamint automatizált feladatvégzést.
 
 Streamlit app: https://x49hpqmppbeadando2025.streamlit.app
+
 Render: https://x49hpq-mpp-beadando-2025.onrender.com
 
 ## Használat lokálisan:
